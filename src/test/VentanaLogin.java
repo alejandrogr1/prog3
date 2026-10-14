@@ -45,7 +45,7 @@ public class VentanaLogin extends JFrame {
 		lContraseña = new JLabel("Contraseña");
 		tContraseña = new JTextField();
 		
-		pCentro.add(lNombre,BorderLayout.CENTER);
+		pCentro.add(lNombre);
 		pCentro.add(tNombre);
 		pCentro.add(lContraseña);
 		pCentro.add(tContraseña);
@@ -57,6 +57,7 @@ public class VentanaLogin extends JFrame {
 	
 	public static void main(String[] args) {
 		new VentanaLogin();
+		System.out.println("Test");
 	}
 
 }
