@@ -17,7 +17,7 @@ public class VentanaLogin extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel pCentro,pNorte,pSur;
-	private JLabel lNombre,lContraseña;
+	private JLabel lNombre,lContraseña,lVentana;
 	private JTextField tNombre,tContraseña;
 	
 	
@@ -30,8 +30,8 @@ public class VentanaLogin extends JFrame {
 	
 		
 		//PANELES
-		pCentro = new JPanel(new GridLayout(2,1));
-		pCentro.setBackground(Color.GRAY);
+		pCentro = new JPanel(new GridLayout(2,1,20,20));
+		pCentro.setBackground(Color.WHITE);
 		add(pCentro,BorderLayout.CENTER);
 		
 		pNorte = new JPanel();
@@ -40,11 +40,14 @@ public class VentanaLogin extends JFrame {
 		pSur = new JPanel();
 		add(pSur,BorderLayout.SOUTH);
 		
-		lNombre  = new JLabel("Usuario");
+		lVentana = new JLabel("INICIO DE SESION");
+		
+		lNombre = new JLabel("Usuario");
 		tNombre = new JTextField();		
 		lContraseña = new JLabel("Contraseña");
 		tContraseña = new JTextField();
 		
+		pNorte.add(lVentana);
 		pCentro.add(lNombre);
 		pCentro.add(tNombre);
 		pCentro.add(lContraseña);
@@ -59,5 +62,6 @@ public class VentanaLogin extends JFrame {
 		new VentanaLogin();
 		System.out.println("Test");
 	}
-
+	
+	
 }
