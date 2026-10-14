@@ -16,7 +16,7 @@ public class VentanaLogin extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel pCentro;
+	private JPanel pCentro,pNorte,pSur;
 	private JLabel lNombre,lContraseña;
 	private JTextField tNombre,tContraseña;
 	
@@ -34,15 +34,22 @@ public class VentanaLogin extends JFrame {
 		pCentro.setBackground(Color.GRAY);
 		add(pCentro,BorderLayout.CENTER);
 		
+		pNorte = new JPanel();
+		add(pNorte,BorderLayout.NORTH);
+		
+		pSur = new JPanel();
+		add(pSur,BorderLayout.SOUTH);
+		
 		lNombre  = new JLabel("Usuario");
 		tNombre = new JTextField();		
 		lContraseña = new JLabel("Contraseña");
 		tContraseña = new JTextField();
 		
-		pCentro.add(lNombre);
+		pCentro.add(lNombre,BorderLayout.CENTER);
 		pCentro.add(tNombre);
 		pCentro.add(lContraseña);
 		pCentro.add(tContraseña);
+		
 		
 		
 		setVisible(true);
