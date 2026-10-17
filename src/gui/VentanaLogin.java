@@ -1,4 +1,4 @@
-package test;
+package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class VentanaLogin extends JFrame {
 
@@ -56,7 +57,10 @@ public class VentanaLogin extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// de momento no hace nada
+				new InterfazHome().setVisible(true);
+				 JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(iniciarSesion);
+			        ventanaActual.dispose();
+				// cierra la ventanalogin y abre home
 			}
 		});
 		pSur.add(iniciarSesion);
