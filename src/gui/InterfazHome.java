@@ -18,7 +18,7 @@ public class InterfazHome extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1800, 1000);
 		setResizable(false);
-		this.setJMenuBar(new BarraMenu().añadirMenu());
+		this.setJMenuBar(new BarraMenu().añadirMenu(this));
 		setLayout(new BorderLayout());
 		PanelCentral panelCentral = new PanelCentral();
 		add(panelCentral);

@@ -18,8 +18,9 @@ import javax.swing.SwingUtilities;
 
 public class BarraMenu extends JFrame {
 	//programa de menu
-	
-		public JMenuBar añadirMenu() {
+	private JFrame ventanaActual;
+		public JMenuBar añadirMenu(JFrame ventanaActual) {
+			this.ventanaActual = ventanaActual;
 			JMenuBar menuBar = new JMenuBar();
 			
 			JMenu menu = new JMenu("");
@@ -33,6 +34,9 @@ public class BarraMenu extends JFrame {
 			menuBar.add(menu);
 			
 			return menuBar;
+		}
+		private void cerrarVentanaActual() {
+			ventanaActual.dispose();
 		}
 		private JPanel panelMenu() {
 			JPanel panel = new JPanel();
@@ -51,16 +55,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon homeIcon = new ImageIcon(getClass().getResource("/images/home.png"));
 				homeIcon = imageResize(homeIcon);
 				botonHomeIcon.setIcon(homeIcon);
-				botonHomeIcon.setOpaque(true);
 				botonHome.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazHome().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonHome);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 						
 					}
 					
@@ -70,10 +70,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazHome().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonHomeIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -85,17 +82,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon peliIcon = new ImageIcon(getClass().getResource("/images/pelis.png"));
 				peliIcon = imageResize(peliIcon);
 				botonPeliculasIcon.setIcon(peliIcon);
-				botonPeliculasIcon.setOpaque(true);
 				botonPeliculas.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazPeli().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonPeliculas);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
-						
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -104,10 +96,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazPeli().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonPeliculasIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -119,17 +108,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon serieIcon = new ImageIcon(getClass().getResource("/images/serie.png"));
 				serieIcon = imageResize(serieIcon);
 				botonSeriesIcon.setIcon(serieIcon);
-				botonSeriesIcon.setOpaque(true);
 				botonSeries.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazSerie().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonSeries);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
-						
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -138,10 +122,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazSerie().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonSeriesIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -153,17 +134,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon updIcon = new ImageIcon(getClass().getResource("/images/up.png"));
 				updIcon = imageResize(updIcon);
 				botonUpandcomingIcon.setIcon(updIcon);
-				botonUpandcomingIcon.setOpaque(true);
 				botonUpandcoming.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazUpAndComing().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonUpandcoming);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
-						
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -172,10 +148,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazUpAndComing().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonUpandcomingIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -187,17 +160,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon verIcon = new ImageIcon(getClass().getResource("/images/vermast.png"));
 				verIcon = imageResize(verIcon);
 				botonVermastardeIcon.setIcon(verIcon);
-				botonVermastardeIcon.setOpaque(true);
 				botonVermastarde.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazVerMasTarde().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonVermastarde);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
-						
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -206,10 +174,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazVerMasTarde().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonVermastardeIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -221,17 +186,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon favIcon = new ImageIcon(getClass().getResource("/images/fav.png"));
 				favIcon = imageResize(favIcon);
 				botonFavoritosIcon.setIcon(favIcon);
-				botonFavoritosIcon.setOpaque(true);
 				botonFavoritos.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazFavoritos().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonFavoritos);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
-						
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -240,10 +200,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazFavoritos().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonFavoritosIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -255,17 +212,12 @@ public class BarraMenu extends JFrame {
 				ImageIcon vIcon = new ImageIcon(getClass().getResource("/images/vip.png"));
 				vIcon = imageResize(vIcon);
 				botonVIPIcon.setIcon(vIcon);
-				botonVIPIcon.setOpaque(true);
 				botonVIP.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						new InterfazVIP().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonVIP);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
-						
+						cerrarVentanaActual();
 					}
 					
 				});
@@ -274,10 +226,7 @@ public class BarraMenu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent a) {
 						new InterfazVIP().setVisible(true);
-						//--IA--cerrar ventana actual
-					    JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(botonVIPIcon);
-					        ventanaActual.dispose();
-					    //--IA--cerrar ventana actual
+						cerrarVentanaActual();
 					}
 					
 				});

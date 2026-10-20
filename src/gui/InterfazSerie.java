@@ -11,7 +11,7 @@ public class InterfazSerie extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1800, 1000);
 		setResizable(false);
-		this.setJMenuBar(new BarraMenu().añadirMenu());
+		this.setJMenuBar(new BarraMenu().añadirMenu(this));
 		
 		JButton test = new JButton("ventana de serie");
 		this.add(test, BorderLayout.CENTER);

@@ -51,8 +51,7 @@ public class VentanaLogin extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new InterfazHome().setVisible(true);
-				 JFrame ventanaActual =(JFrame) SwingUtilities.getWindowAncestor(iniciarSesion);
-			        ventanaActual.dispose();
+			        dispose();
 				// cierra la ventanalogin y abre home
 			}
 		});
