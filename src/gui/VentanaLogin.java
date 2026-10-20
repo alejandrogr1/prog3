@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,29 +20,23 @@ public class VentanaLogin extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel pCentro,pNorte,pSur;
+	private JPanel pCentro,pNorte,pSur,pUsuario,pContrasenya,pCampoNombre,pCampoContraseña;
 	private JLabel lNombre,lContraseña,lVentana;
 	private JTextField tNombre,tContraseña;
-	private JPanel pUsuario;
-	private JPanel pContrasenya;
 	private JButton iniciarSesion;
+	
 	public VentanaLogin() {
 		
+		//PROPIEDADES
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setBounds(600, 400, 600, 400);
+		setBounds(600, 400, 300, 300);
 		setTitle("Inicio Sesion");
 		setResizable(false);
 		
-		// Botón
-		iniciarSesion = new JButton("INICIAR SESION");
-		
 		//PANELES
 		pCentro = new JPanel(new GridLayout(2,1,20,20));
-		pCentro.setBackground(Color.WHITE);
 		pUsuario = new JPanel(new GridLayout(2,1,10,10));
-		pUsuario.setBackground(Color.WHITE);
 		pContrasenya = new JPanel(new GridLayout(2,1,10,10));
-		pContrasenya.setBackground(Color.WHITE);
 		add(pCentro,BorderLayout.CENTER);
 
 		pNorte = new JPanel();
@@ -63,6 +56,7 @@ public class VentanaLogin extends JFrame {
 				// cierra la ventanalogin y abre home
 			}
 		});
+		
 		pSur.add(iniciarSesion);
 
 		lVentana = new JLabel("INICIO DE SESION");
@@ -70,26 +64,28 @@ public class VentanaLogin extends JFrame {
 		lNombre = new JLabel("Nombre de usuario");
 		lNombre.setHorizontalAlignment(JLabel.CENTER);
 		tNombre = new JTextField(15);
+		
 		lContraseña = new JLabel("Contraseña");
 		lContraseña.setHorizontalAlignment(JLabel.CENTER);
 		tContraseña = new JTextField(15);
 
-		JPanel pCampoNombre = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		pCampoNombre = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		pCampoNombre.add(tNombre);
 
-		JPanel pCampoContraseña = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		pCampoContraseña = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		pCampoContraseña.add(tContraseña);
 
 		pNorte.add(lVentana);
+		
 		pUsuario.add(lNombre);
 		pUsuario.add(pCampoNombre);
+		
 		pContrasenya.add(lContraseña);
 		pContrasenya.add(pCampoContraseña);
+		
 		pCentro.add(pUsuario);
 		pCentro.add(pContrasenya);
 
-		
-		
 		
 		setVisible(true);
 	}
