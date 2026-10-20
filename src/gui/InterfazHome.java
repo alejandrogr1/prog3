@@ -1,9 +1,14 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import gui.paneles.*;
 
 public class InterfazHome extends JFrame {
 
@@ -14,10 +19,11 @@ public class InterfazHome extends JFrame {
 		setSize(1800, 1000);
 		setResizable(false);
 		this.setJMenuBar(new BarraMenu().añadirMenu());
+		setLayout(new BorderLayout());
+		PanelCentral panelCentral = new PanelCentral();
+		add(panelCentral);
 		
-		JButton test = new JButton("ventana de home");
-		this.add(test, BorderLayout.CENTER);
+		
 		setVisible(true);
-	}
-
+	}	
 }
