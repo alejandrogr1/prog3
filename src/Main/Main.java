@@ -8,9 +8,8 @@ import gui.VentanaLogin;
 public class Main extends JFrame {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		//En la ventana login al dar a iniciar sesión abre la interfaz Home
 		new VentanaLogin();
-		new InterfazHome();
 	}
 
 }

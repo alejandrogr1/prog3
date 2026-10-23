@@ -12,7 +12,7 @@ public class InterfazVerMasTarde extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1800, 1000);
 		setResizable(false);
-		this.setJMenuBar(new BarraMenu().añadirMenu(this));
+		this.setJMenuBar(new InterfazHerramientas().añadirMenu(this));
 		
 		JButton test = new JButton("ventana de ver mas tarde");
 		this.add(test, BorderLayout.CENTER);

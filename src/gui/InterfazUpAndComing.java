@@ -12,7 +12,7 @@ public class InterfazUpAndComing extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1800, 1000);
 		setResizable(false);
-		this.setJMenuBar(new BarraMenu().añadirMenu(this));
+		this.setJMenuBar(new InterfazHerramientas().añadirMenu(this));
 		
 		JButton test = new JButton("ventana de up and coming");
 		this.add(test, BorderLayout.CENTER);
