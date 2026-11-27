@@ -156,6 +156,12 @@ public class Usuario {
 	public String getNombreUsuario() {
 		return nombreUsuario;
 	}
+//	TODO: 	Cambio temporal para el funcionamiento de la BD
+//			Devuelve la contraseña SOLO para persistencia en BD.
+//	  		No usar en interfaz ni lógica de negocio.
+	public String getContrasenyaEXCLUSIVOBD() {
+		return contrasenya;
+	}
 
 	public void setContrasenya(String contrasenya) {
 		this.contrasenya = contrasenya;
