@@ -46,6 +46,7 @@ public class InterfazVIP extends JFrame {
 		JPanel panelCabecera = new JPanel(new BorderLayout());
 		JLabel titulo = new JLabel(" VIP ");
 		titulo.setFont(new Font("Georgia", Font.BOLD, 42));
+		// Foreground es color del texto
 		titulo.setForeground(new Color(212, 175, 55)); // Gold
 		panelCabecera.add(titulo, BorderLayout.WEST);
 		panelCabecera.add(new InterfazHerramientas().añadirPerfilyNotificacion(), BorderLayout.EAST);
@@ -77,7 +78,6 @@ public class InterfazVIP extends JFrame {
 		tabs.setTabComponentAt(3, cabecera4);
 
 		// Hilo que cuenta segundos, si segundos mayor qu e 0 y resta 1 cada segundo
-		// Empieza y termina segun cuando se abre o cierra la interfazVIP
 		Thread hilo = new Thread(() -> {
 			while (true) {
 				try {
@@ -99,6 +99,7 @@ public class InterfazVIP extends JFrame {
 						pagoPendiente = 0;
 						
 						// Pestaña que salta cuando termina el tiempo para decir que ha caducado
+						 // SwingUtilities.invokeLater para el hilo poder modificar
 						SwingUtilities.invokeLater(() -> {
 							tabs.setComponentAt(3, panelMiEstado());
 							JOptionPane.showMessageDialog(this, "Su " + caducado + " ha caducado");
@@ -259,6 +260,7 @@ public class InterfazVIP extends JFrame {
 				// \u2714 es tick y \u2718 es cruz
 				JLabel tick = new JLabel(tiene[i][j] ? "\u2714" : "\u2718", SwingConstants.CENTER); // SwingConstants.CENTER para que se ponga en el medio
 				tick.setFont(new Font("Dialog", Font.BOLD, 26));
+				// Foreground es color del texto
 				tick.setForeground(tiene[i][j] ? verde : rojo);
 
 				fila.add(nombre, BorderLayout.WEST);
@@ -268,6 +270,7 @@ public class InterfazVIP extends JFrame {
 			// si es la segunado y la tercera panel poner minPagos
 			JLabel minPagos = new JLabel(i >= 1 ? "Mínimo 2 pagos" : "", SwingConstants.CENTER);
 			minPagos.setFont(new Font("Georgia", Font.ITALIC, 18));
+			// Foreground es color del texto
 			minPagos.setForeground(gold);
 			props.add(minPagos);
 			panel.add(props, BorderLayout.CENTER);
@@ -281,6 +284,7 @@ public class InterfazVIP extends JFrame {
 			JButton comprar = new JButton("Comprar");
 			comprar.setFont(new Font("Georgia", Font.BOLD, 22));
 			comprar.setBackground(gold);
+			// Foreground es color del texto
 			comprar.setForeground(Color.BLACK);
 			
 			// Lo que hace el boton comprar, actualiza MI ESTADO
@@ -343,10 +347,14 @@ public class InterfazVIP extends JFrame {
 		// Panel principal
 		JPanel panelp = new JPanel(new BorderLayout());
 		// 4 paneles vacios para que el contenido se quede en el medio
-		JPanel vacio1 = new JPanel(); vacio1.setPreferredSize(new Dimension(0, 40));
-		JPanel vacio2 = new JPanel(); vacio2.setPreferredSize(new Dimension(0, 40));
-		JPanel vacio3 = new JPanel(); vacio3.setPreferredSize(new Dimension(300, 50));
-		JPanel vacio4 = new JPanel(); vacio4.setPreferredSize(new Dimension(300, 50));
+		JPanel vacio1 = new JPanel(); 
+		vacio1.setPreferredSize(new Dimension(0, 40));
+		JPanel vacio2 = new JPanel(); 
+		vacio2.setPreferredSize(new Dimension(0, 40));
+		JPanel vacio3 = new JPanel(); 
+		vacio3.setPreferredSize(new Dimension(300, 50));
+		JPanel vacio4 = new JPanel(); 
+		vacio4.setPreferredSize(new Dimension(300, 50));
 
 		//panel con el contenido y border
 		JPanel panel = new JPanel(new BorderLayout(0, 20));
@@ -400,6 +408,7 @@ public class InterfazVIP extends JFrame {
 		JButton botonTiempo = new JButton("Test duración");
 		botonTiempo.setFont(new Font("Georgia", Font.BOLD, 18));
 		botonTiempo.setBackground(gold);
+		// Foreground es color del texto
 		botonTiempo.setForeground(Color.BLACK);
 		
 		// Abre una ventana para modificar tiempo, Test duración
