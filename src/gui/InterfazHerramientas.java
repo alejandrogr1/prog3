@@ -9,367 +9,212 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
 
 public class InterfazHerramientas extends JFrame {
 
 	//Variable para guardar la ventana actual
 	private JFrame ventanaActual;
-	
-		// Método para añadir el menuBar, con funcionalidad
-		public JMenuBar añadirMenu(JFrame ventanaActual) {
-			//Guarda la ventana actual para luego poder cerrarlo al cambiar de interfaz
-			this.ventanaActual = ventanaActual;
-			
-			JMenuBar menuBar = new JMenuBar();
-			
-			//Menu
-			JMenu menu = new JMenu("");
-			ImageIcon menuIcon = new ImageIcon(getClass().getResource("/images/menu.png"));
-			//Cambia el tamaño de boton del icono a altura 60y anchura 60
-			menuIcon = imageResize(menuIcon,60,60);
-			menu.setIcon(menuIcon);
-			menu.add(panelMenu());
-			
-			//La barra de menu adapta automáticamente el tamaño del boton menu que es el icono
-			menuBar.add(menu);
-			
-			return menuBar;
+
+	// Guarda las ventanas ya creadas, static es que lo comparten todas las ventanas
+	// Para luego poder coger datos de esas ventanas
+	private static HashMap<String, JFrame> ventanas = new HashMap<String, JFrame>();
+
+	// Método para añadir el menuBar, con funcionalidad
+	public JMenuBar añadirMenu(JFrame ventanaActual) {
+		// Guarda la ventana actual para luego poder esconderla al cambiar de interfaz
+		this.ventanaActual = ventanaActual;
+		// Se apunta en la lista con su nombre, como "InterfazVIP"
+		ventanas.put(ventanaActual.getClass().getSimpleName(), ventanaActual);
+
+		JMenuBar menuBar = new JMenuBar();
+
+		// Menu
+		JMenu menu = new JMenu("");
+		ImageIcon menuIcon = new ImageIcon(getClass().getResource("/images/menu.png"));
+		// Cambia el tamaño de boton del icono a altura 60 y anchura 60
+		menuIcon = imageResize(menuIcon, 60, 60);
+		menu.setIcon(menuIcon);
+		menu.add(panelMenu());
+		// La barra de menu adapta el tamaño del boton menu que es el icono
+		menuBar.add(menu);
+
+		// Contador de duración VIP, a la derecha de la barra
+		final JLabel duracionVIP = new JLabel("VIP: ninguno");
+		duracionVIP.setFont(new Font("Georgia", Font.BOLD, 20));
+		// Foreground es color del texto
+		duracionVIP.setForeground(new Color(212, 175, 55)); // Gold
+		duracionVIP.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20)); // espacio en la deracha para que se quede bonito
+		menuBar.add(Box.createHorizontalGlue()); // hace que el duraciónVIOP este en la derecha
+		menuBar.add(duracionVIP);
+
+		actualizarContador(duracionVIP);
+		//Hilo que actualiza el texto cada segundo
+		Thread reloj = new Thread(() -> {
+		    while (true) {
+		        try {
+		            Thread.sleep(1000);
+
+		            // SwingUtilities.invokeLater para el hilo poder modificar
+		            SwingUtilities.invokeLater(() -> {
+		                actualizarContador(duracionVIP);
+		            });
+
+		        } catch (InterruptedException e) {
+		        	// termina el hilo si es interrumpido
+		            break;
+		        }
+		    }
+		});
+
+		reloj.start();
+
+		return menuBar;
+	}
+
+	// Lee el tiempo de la ventana InterfazVIP y actualiza el label
+	private void actualizarContador(JLabel label) {
+		// Coge el interfazVIP ya creada y guardada en el hashmap
+		InterfazVIP vip = (InterfazVIP) ventanas.get("InterfazVIP");
+		// Con el dato de esa interfazVIP para actualiza el label
+		if (vip == null || vip.vipComprado.equals("none")) {
+			label.setText("VIP: ninguno");
+		} else {
+			label.setText(vip.vipComprado + "  " + vip.formatoTiempo(vip.segundos));
+		}
+	}
+
+	// En vez de cerrar la ventana (dispose), lo pone invisible y muestra otra.
+	// Para que la ventana y el hilo de InterfazVIP siguen abierto y no se termine ql hilo.
+	private void abrirVentana(String nombre) {
+		// Si ya estás en esa ventana, no hace nada
+		if (ventanaActual.getClass().getSimpleName().equals(nombre)) {
+			return;
 		}
 		
-		//Método para cerrar la ventana actual que estaba guardado
-		private void cerrarVentanaActual() {
-			ventanaActual.dispose();
-		}
-		
-		//Botones del menu
-		private JPanel panelMenu() {
-			
-			//Panel principal
-			JPanel panel = new JPanel();
-			
-			//7 paneles para 14 botones, 2 en cada----FlowLayout(alineación, separación horizontal, separación vertical)
-			JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			JPanel panel5 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			JPanel panel6 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			JPanel panel7 = new JPanel(new FlowLayout(FlowLayout.CENTER,10,5));
-			
-				//Boton de Home
-				JButton botonHome = new JButton("Home");
-				botonHome.setPreferredSize(new Dimension(120,40));
-				
-				//Boton de Icono Home
-				JButton botonHomeIcon = new JButton("");
-				ImageIcon homeIcon = new ImageIcon(getClass().getResource("/images/home.png"));
-				homeIcon = imageResize(homeIcon,65,65);
-				botonHomeIcon.setIcon(homeIcon);
-				
-				//Lo que hace ambos botones
-				botonHome.addActionListener(new ActionListener() {
+		// Coge la ventana si ya esta guardada en hasmap
+		JFrame destino = ventanas.get(nombre);
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazHome().setVisible(true);
-						cerrarVentanaActual();
-						
-					}
-					
-				});
-				botonHomeIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazHome().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Boton de Películas
-				JButton botonPeliculas = new JButton("Películas");
-				botonPeliculas.setPreferredSize(new Dimension(120,40));
-				
-				//Boton de Icono Películas
-				JButton botonPeliculasIcon = new JButton("");
-				ImageIcon peliIcon = new ImageIcon(getClass().getResource("/images/pelis.png"));
-				peliIcon = imageResize(peliIcon,65,65);
-				botonPeliculasIcon.setIcon(peliIcon);
-				
-				//Lo que hace ambos botones
-				botonPeliculas.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazPeli().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				botonPeliculasIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazPeli().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Boton Series
-				JButton botonSeries = new JButton("Series");
-				botonSeries.setPreferredSize(new Dimension(120,40));
-				
-				//Botno Icono Series
-				JButton botonSeriesIcon = new JButton("");
-				ImageIcon serieIcon = new ImageIcon(getClass().getResource("/images/serie.png"));
-				serieIcon = imageResize(serieIcon,65,65);
-				botonSeriesIcon.setIcon(serieIcon);
-				
-				//Lo que hace ambos botones
-				botonSeries.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazSerie().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				botonSeriesIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazSerie().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Boton de Up And Coming
-				JButton botonUpandcoming = new JButton("Up and Coming");
-				botonUpandcoming.setPreferredSize(new Dimension(120,40));
-				
-				//Boton de Icono Up And Coming
-				JButton botonUpandcomingIcon = new JButton("");
-				ImageIcon updIcon = new ImageIcon(getClass().getResource("/images/up.png"));
-				updIcon = imageResize(updIcon,65,65);
-				botonUpandcomingIcon.setIcon(updIcon);
-				
-				//Lo que hace amnbos botones
-				botonUpandcoming.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazUpAndComing().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				botonUpandcomingIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazUpAndComing().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Boton de Ver Más Tarde
-				JButton botonVermastarde = new JButton("Ver más tarde");
-				botonVermastarde.setPreferredSize(new Dimension(120,40));
-				
-				//Boton de Icono Ver Más Tarde
-				JButton botonVermastardeIcon = new JButton("");
-				ImageIcon verIcon = new ImageIcon(getClass().getResource("/images/vermast.png"));
-				verIcon = imageResize(verIcon,65,65);
-				botonVermastardeIcon.setIcon(verIcon);
-				
-				//lo que hace ambos botones
-				botonVermastarde.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazVerMasTarde().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				botonVermastardeIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazVerMasTarde().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Boton de Favoritos
-				JButton botonFavoritos = new JButton("Favoritos");
-				botonFavoritos.setPreferredSize(new Dimension(120,40));
-				
-				//Boton de Icono Favoritos
-				JButton botonFavoritosIcon = new JButton("");
-				ImageIcon favIcon = new ImageIcon(getClass().getResource("/images/fav.png"));
-				favIcon = imageResize(favIcon,65,65);
-				botonFavoritosIcon.setIcon(favIcon);
-				
-				//Lo que hace ambos botones
-				botonFavoritos.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazFavoritos().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				botonFavoritosIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazFavoritos().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Boton de VIP
-				JButton botonVIP = new JButton("VIP");
-				botonVIP.setPreferredSize(new Dimension(120,40));
-				
-				//Boton de Icono VIP
-				JButton botonVIPIcon = new JButton("");
-				ImageIcon vIcon = new ImageIcon(getClass().getResource("/images/vip.png"));
-				vIcon = imageResize(vIcon,65,65);
-				botonVIPIcon.setIcon(vIcon);
-				
-				//Lo que hace ambos botones
-				botonVIP.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazVIP().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				botonVIPIcon.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent a) {
-						
-						//Abre la interfaz determinado y cierra la ventana actual
-						new InterfazVIP().setVisible(true);
-						cerrarVentanaActual();
-					}
-					
-				});
-				
-				//Añadir de orden BotonIcono--BotonTexto a un panel
-				panel1.add(botonHomeIcon);
-				panel1.add(botonHome);
-				
-				//Añadir al panel principal, por orden
-				panel.add(panel1,BorderLayout.NORTH);
-				
-				panel2.add(botonPeliculasIcon);
-				panel2.add(botonPeliculas);
-				panel.add(panel2,BorderLayout.NORTH);
-				
-				panel3.add(botonSeriesIcon);
-				panel3.add(botonSeries);
-				panel.add(panel3,BorderLayout.NORTH);
-				
-				panel4.add(botonUpandcomingIcon);
-				panel4.add(botonUpandcoming);
-				panel.add(panel4,BorderLayout.NORTH);
-				
-				panel5.add(botonVermastardeIcon);
-				panel5.add(botonVermastarde);
-				panel.add(panel5,BorderLayout.NORTH);
-				
-				panel6.add(botonFavoritosIcon);
-				panel6.add(botonFavoritos);
-				panel.add(panel6,BorderLayout.NORTH);
-				
-				panel7.add(botonVIPIcon);
-				panel7.add(botonVIP);
-				panel.add(panel7,BorderLayout.NORTH);
-				
-				//Cambia el tamaño del panle principal para que quede bonito, no afecta a paneles dentro de él
-				panel.setPreferredSize(new Dimension(250,850));
-				
-			return panel;
+		// Si no hay, la crea 
+		if (destino == null) {
+			if (nombre.equals("InterfazHome")) {
+				destino = new InterfazHome();
+			} else if (nombre.equals("InterfazPeli")) {
+				destino = new InterfazPeli();
+			} else if (nombre.equals("InterfazSerie")) {
+				destino = new InterfazSerie();
+			} else if (nombre.equals("InterfazUpAndComing")) {
+				destino = new InterfazUpAndComing();
+			} else if (nombre.equals("InterfazVerMasTarde")) {
+				destino = new InterfazVerMasTarde();
+			} else if (nombre.equals("InterfazFavoritos")) {
+				destino = new InterfazFavoritos();
+			} else if (nombre.equals("InterfazVIP")) {
+				destino = new InterfazVIP();
 			}
-		//Método para añadir boton de noticicafión y perfil (flowlayout.right)
+		}
+
+		destino.setVisible(true);
+		// Lo esconde pero no lo cierra
+		ventanaActual.setVisible(false); 
+	}
+
+	// Crea una fila del menu, botón icono + botón texto, los dos hacen lo mismo
+	private JPanel crearFila(String texto, String icono, final String nombreVentana) {
+		JPanel fila = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+
+		// Boton icono
+		JButton botonIcono = new JButton("");
+		ImageIcon icon = new ImageIcon(getClass().getResource("/images/" + icono));
+		icon = imageResize(icon, 65, 65);
+		botonIcono.setIcon(icon);
+		
+		// Boton texto
+		JButton botonTexto = new JButton(texto);
+		botonTexto.setPreferredSize(new Dimension(120, 40));
+
+
+		// Lo que hace ambos botones
+		ActionListener accion = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				abrirVentana(nombreVentana);
+			}
+		};
+		botonIcono.addActionListener(accion);
+		botonTexto.addActionListener(accion);
+
+
+		// Orden boton icono boton texto
+		fila.add(botonIcono);
+		fila.add(botonTexto);
+		return fila;
+	}
+
+
+	// Botones del menu
+	private JPanel panelMenu() {
+		// Panel principal
+		JPanel panel = new JPanel();
+
+		// Añadir los filas en orden
+		panel.add(crearFila("Home", "home.png", "InterfazHome"));
+		panel.add(crearFila("Películas", "pelis.png", "InterfazPeli"));
+		panel.add(crearFila("Series", "serie.png", "InterfazSerie"));
+		panel.add(crearFila("Up and Coming", "up.png", "InterfazUpAndComing"));
+		panel.add(crearFila("Ver más tarde", "vermast.png", "InterfazVerMasTarde"));
+		panel.add(crearFila("Favoritos", "fav.png", "InterfazFavoritos"));
+		panel.add(crearFila("VIP", "vip.png", "InterfazVIP"));
+
+
+		// Cambia el tamaño del panel principal para que quede bonito, no afecta a paneles dentro de el
+		panel.setPreferredSize(new Dimension(250, 850));
+		return panel;
+	}
+
+		// Método para añadir boton de noticicafión y perfil (flowlayout.right)
 		public JPanel añadirPerfilyNotificacion() {
 			//Panel principal
 			JPanel panelNotificacion = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
 			
-			//Boton de imagen notificación
+			// Boton de imagen notificación
 			ImageIcon iconoNotificacion = new ImageIcon(getClass().getResource("/images/notis.png"));
 			iconoNotificacion = imageResize(iconoNotificacion, 50, 50);
 			JButton botonNotificacion = new JButton(iconoNotificacion);
 			botonNotificacion.setPreferredSize(new Dimension(70, 60));
 			
-			//Boton de imagen perfil
+			// Boton de imagen perfil
 			ImageIcon iconoPerfil = new ImageIcon(getClass().getResource("/images/Perfil.png"));
 			iconoPerfil = imageResize(iconoPerfil, 50, 50);
 			JButton botonPerfil = new JButton(iconoPerfil);
 			botonPerfil.setPreferredSize(new Dimension(70, 60));
 			
-			//Añadir a panel principal, derecha
+			// Añadir a panel principal, derecha
 			panelNotificacion.add(botonNotificacion);
 			panelNotificacion.add(botonPerfil);
 
 			return panelNotificacion;
 		}
 		
-		//Método para añadir Caracteristicas
+		// Método para añadir Caracteristicas
 		public JPanel añadirCaracteristica() {
 			
-			//Panel principal
+			// Panel principal
 			JPanel panelp = new JPanel(new GridLayout(5,1));
 			
-			//Primera linea de característica en panel1
+			// Primera linea de característica en panel1
 			JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 				
 			JRadioButton nuevo = new JRadioButton("Nuevos");
@@ -386,12 +231,12 @@ public class InterfazHerramientas extends JFrame {
 			panel1.add(valorado);
 			panel1.add(az);
 			
-			//Segunda linea de caracteristica en panel2, genero
+			// Segunda linea de caracteristica en panel2, genero
 			JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			
 			String[] generos = {"Todos los Géneros", "Acción", "Aventura", "Comedia", "Drama", "Fantasía", "Horror", "Romance"};
 				
-			//Bucle que crea el boton con nombre de String[] generos, background blanco, negrita | modelo italic e 15 de tamaño
+			// Bucle que crea el boton con nombre de String[] generos, background blanco, negrita | modelo italic e 15 de tamaño
 				for (String s : generos) {
 					
 					JButton botones = new JButton("" + s);
@@ -400,11 +245,11 @@ public class InterfazHerramientas extends JFrame {
 					panel2.add(botones);
 				}
 			
-				//Tercera linea de caracteristica en panel3, lugar
+				// Tercera linea de caracteristica en panel3, lugar
 				JPanel panel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 				
 				String[] lugar = {"Todos los Lugares", "Europa", "África", "América", "Asia", "Polo Norte", "Polo Sur"};
-				//Bucle que crea el boton con nombre de String[] Lugar, background blanco, negrita | modelo italic e 15 de tamaño	
+				// Bucle que crea el boton con nombre de String[] Lugar, background blanco, negrita | modelo italic e 15 de tamaño	
 					for (String s : lugar) {
 						
 						JButton botones = new JButton("" + s);
@@ -412,11 +257,11 @@ public class InterfazHerramientas extends JFrame {
 						botones.setFont(new Font("courier", Font.BOLD | Font.ITALIC, 15 ));
 						panel3.add(botones);
 					}
-				//Cuarta linea de caracteristica en panel4, idioma	
+				// Cuarta linea de caracteristica en panel4, idioma	
 				JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 					
 				String[] idioma = {"Todos los Idiomas", "Inglés", "Castellano", "Francés", "Italiano", "Chino", "Japones", "Koreano", "Otros"};
-				//Bucle que crea el boton con nombre de String[] idioma, background blanco, negrita | modelo italic e 15 de tamaño		
+				// Bucle que crea el boton con nombre de String[] idioma, background blanco, negrita | modelo italic e 15 de tamaño		
 					for (String s : idioma) {
 							
 						JButton botones = new JButton("" + s);
@@ -425,7 +270,7 @@ public class InterfazHerramientas extends JFrame {
 						panel4.add(botones);
 					}
 						
-				//Quinta linea de caracteristica en panel5, vip y free			
+				// Quinta linea de caracteristica en panel5, vip y free			
 				JPanel panel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 					
 				JRadioButton VIP = new JRadioButton("VIP");
@@ -436,7 +281,7 @@ public class InterfazHerramientas extends JFrame {
 				panel5.add(VIP);
 				panel5.add(FREE);
 
-				//Añadir en orden panel1-5
+				// Añadir en orden panel1-5
 				panelp.add(panel1);
 				panelp.add(panel2);
 				panelp.add(panel3);
@@ -446,21 +291,21 @@ public class InterfazHerramientas extends JFrame {
 			return panelp;
 		}
 		
-		//Método para añadir un panel que contiene imagen de peli y su titulo, visual
+		// Método para añadir un panel que contiene imagen de peli y su titulo, visual
 		public JPanel añadirPanelPeli() {
-			//panel principal
+			// panel principal
 			JPanel panelPeli = new JPanel(new BorderLayout(0,20));
 			
-			//Boton de imagen
+			// Boton de imagen
 			JButton imagePeli = new JButton();
 			ImageIcon peliIcon = new ImageIcon(getClass().getResource("/images/pelis.png"));
 			peliIcon = imageResize(peliIcon,180,180);
 			imagePeli.setIcon(peliIcon);
 			
-			//Boton de titulo
+			// Boton de titulo
 			JButton tituloPeli = new JButton("Titulo de película");
 			
-			//Añadir a su posición
+			// Añadir a su posición
 			panelPeli.add(imagePeli, BorderLayout.CENTER);
 			panelPeli.add(tituloPeli, BorderLayout.SOUTH);
 			
@@ -468,21 +313,21 @@ public class InterfazHerramientas extends JFrame {
 			return panelPeli;
 		}
 		
-		//Método para añadir una figura que contiene imagen de serie y su titulo, visual
+		// Método para añadir una figura que contiene imagen de serie y su titulo, visual
 		public JPanel añadirPanelSerie() {
 			//panel principal
 			JPanel panelSerie= new JPanel(new BorderLayout(0,20));
 			
-			//Boton de imagen
+			// Boton de imagen
 			JButton imageSerie = new JButton();
 			ImageIcon serieIcon = new ImageIcon(getClass().getResource("/images/serie.png"));
 			serieIcon = imageResize(serieIcon,180,180);
 			imageSerie.setIcon(serieIcon);
 			
-			//Boton de titulo
+			// Boton de titulo
 			JButton tituloSerie = new JButton("Titulo de Serie");
 			
-			//Añadir a su posición
+			// Añadir a su posición
 			panelSerie.add(imageSerie, BorderLayout.CENTER);
 			panelSerie.add(tituloSerie, BorderLayout.SOUTH);
 			
@@ -490,7 +335,7 @@ public class InterfazHerramientas extends JFrame {
 			return panelSerie;
 		}
 		
-		//Método para modificar tamaño de imagen
+		// Método para modificar tamaño de imagen
 		public ImageIcon imageResize(ImageIcon m, int width, int height) {
 			//-Comienzo------IA cambiar tamaño de imagen----(x,y, image.scale_smooth)
 			Image imagen = m.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
